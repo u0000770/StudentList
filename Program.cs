@@ -8,20 +8,20 @@ namespace StudentList
         static void Main()
         {
             // Sample data
-        List<Student> StudentList = new List<Student>
-        {
-            new Student { Surname = "Smith", Forenames = "John", Age = 20, Course = "Computer Science", Mark = 85, EnrolmentYear = 2021 },
-            new Student { Surname = "Doe", Forenames = "Jane", Age = 22, Course = "Mathematics", Mark = 78, EnrolmentYear = 2020 },
-            new Student { Surname = "Brown", Forenames = "Alice", Age = 19, Course = "Computer Science", Mark = 90, EnrolmentYear = 2019 },
-            new Student { Surname = "Jones", Forenames = "Bob", Age = 21, Course = "Engineering", Mark = 70, EnrolmentYear = 2021 },
-            new Student { Surname = "Taylor", Forenames = "Chris", Age = 23, Course = "Mathematics", Mark = 82, EnrolmentYear = 2022 },
-            new Student { Surname = "Wilson", Forenames = "Emma", Age = 20, Course = "Engineering", Mark = 88, EnrolmentYear = 2022 }
-        };
+            List<Student> StudentList = new List<Student>
+            {
+                new Student { Surname = "Smith", Forenames = "John", Age = 20, Course = "Computer Science", Mark = 85, EnrolmentYear = 2021 },
+                new Student { Surname = "Doe", Forenames = "Jane", Age = 22, Course = "Mathematics", Mark = 78, EnrolmentYear = 2020 },
+                new Student { Surname = "Brown", Forenames = "Alice", Age = 19, Course = "Computer Science", Mark = 90, EnrolmentYear = 2019 },
+                new Student { Surname = "Jones", Forenames = "Bob", Age = 21, Course = "Engineering", Mark = 70, EnrolmentYear = 2021 },
+                new Student { Surname = "Taylor", Forenames = "Chris", Age = 23, Course = "Mathematics", Mark = 82, EnrolmentYear = 2022 },
+                new Student { Surname = "Wilson", Forenames = "Emma", Age = 20, Course = "Engineering", Mark = 88, EnrolmentYear = 2022 }
+            };
 
             // 1. Filter by Course and Sort by Mark
             var message = "1. Computer Science Students sorted by Mark:";
-            List<StudentViewModel> compSciStudents = Student.FilterbyCourseSortbyMark(StudentList,"Computer Science");
-            DisplayStudentMarks(compSciStudents,message);
+            List<StudentViewModel> compSciStudents = Student.FilterbyCourseSortbyMark(StudentList, "Computer Science");
+            DisplayStudentMarks(compSciStudents, message);
 
             // 2. Find Students Enrolled After a Certain Year
             List<StudentViewModel> studentsEnrolledAfter2020 = Student.StudentsEnrolledAfterYear(StudentList, 2020);
@@ -34,19 +34,25 @@ namespace StudentList
 
             Console.WriteLine("\n3. Average Mark by Course:");
             foreach (var course in avgMarkByCourse)
+            {
                 Console.WriteLine($"{course.course}: {course.mark}");
+            }
 
             // 4. Find the Youngest Student in Each Course
             IEnumerable<StudentViewModel> vm = Student.YoungestStudentPerCourse(StudentList);
             Console.WriteLine("\n4. Youngest Student in Each Course:");
             foreach (var student in vm)
+            {
                 Console.WriteLine($"{student.course}: {student.name}, {student.age}");
+            }
 
             // 5. Count Students by Enrolment Year
             IEnumerable<EnrolmentYearViewModel> enrolmentYearViewModels = Student.CountByEnrolmentYear(StudentList);
             Console.WriteLine("\n5. Count of Students by Enrolment Year:");
             foreach (var year in enrolmentYearViewModels)
+            { 
                 Console.WriteLine($"{year.year}: {year.count}");
+            }
 
             // 6. Find Students with Marks in a Specific Range
             var studentsWithMarksInRange = Student.GetStudentsWithMarksInRange(StudentList, 70, 85);
