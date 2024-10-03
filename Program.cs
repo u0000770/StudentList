@@ -1,28 +1,7 @@
-﻿using StudentList;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-
+﻿
 namespace StudentList
 {
-    public class CourseViewModel
-    {
-        public string course { get;set; }
-        public double averageMark { get;set; }
-    }
-
-    public class StudentViewModel
-    {
-        public string course { get; set; }
-        public string name { get; set; }
-        public int age { get; set; }
-        public bool? IsAbove80 { get; set; }
-    }
-
-    public class EnrolmentYearViewModel
-    {
-        public int year { get; set; }
-        public int count { get; set; }
-    }
+   
 
     class Program
     {
@@ -40,22 +19,22 @@ namespace StudentList
         };
 
             // 1. Filter by Course and Sort by Mark
-            IOrderedEnumerable<Student> compSciStudents = Student.FilterbyCourseSortbyMark(StudentList);
-            Console.WriteLine("1. Computer Science Students sorted by Mark:");
-            foreach (var student in compSciStudents)
-                Console.WriteLine($"{student.Surname}, {student.Mark}");
+            var message = "1. Computer Science Students sorted by Mark:";
+            List<StudentViewModel> compSciStudents = Student.FilterbyCourseSortbyMark(StudentList,"Computer Science");
+            DisplayStudentMarks(compSciStudents,message);
 
             // 2. Find Students Enrolled After a Certain Year
-            IOrderedEnumerable<Student> studentsEnrolledAfter2020 = Student.StudentsEnrolledAfterYear(StudentList, 2020);
+            List<StudentViewModel> studentsEnrolledAfter2020 = Student.StudentsEnrolledAfterYear(StudentList, 2020);
             Console.WriteLine("\n2. Students enrolled after 2020:");
             foreach (var student in studentsEnrolledAfter2020)
-                Console.WriteLine($"{student.Surname}, {student.EnrolmentYear}");
+                Console.WriteLine($"{student.name}, {student.year}");
 
             // 3. Calculate Average Mark by Course
-            IEnumerable<CourseViewModel> avgMarkByCourse = Student.AverageMarkbyCourse(StudentList);
+            IEnumerable<CourseViewModel> avgMarkByCourse = Student.AverageMarkByCourse(StudentList);
+
             Console.WriteLine("\n3. Average Mark by Course:");
             foreach (var course in avgMarkByCourse)
-                Console.WriteLine($"{course.course}: {course.averageMark}");
+                Console.WriteLine($"{course.course}: {course.mark}");
 
             // 4. Find the Youngest Student in Each Course
             IEnumerable<StudentViewModel> vm = Student.YoungestStudentPerCourse(StudentList);
@@ -70,37 +49,26 @@ namespace StudentList
                 Console.WriteLine($"{year.year}: {year.count}");
 
             // 6. Find Students with Marks in a Specific Range
-            var studentsWithMarksInRange = StudentList
-                .Where(s => s.Mark >= 70 && s.Mark <= 85)
-                .OrderBy(s => s.Mark);
+            var studentsWithMarksInRange = Student.GetStudentsWithMarksInRange(StudentList, 70, 85);
+            DisplayStudentMarks(studentsWithMarksInRange, "\n6. Students with Marks between 70 and 85:");
 
-            Console.WriteLine("\n6. Students with Marks between 70 and 85:");
-            foreach (var student in studentsWithMarksInRange)
-                Console.WriteLine($"{student.Surname}, {student.Mark}");
 
             // 7. Filter by Age and Sort by Mark
-            var studentsOlderThan21 = StudentList
-                .Where(s => s.Age > 21)
-                .OrderByDescending(s => s.Mark);
-            Console.WriteLine("\n7. Students older than 21 sorted by Mark:");
-            foreach (var student in studentsOlderThan21)
-                Console.WriteLine($"{student.Surname}, {student.Mark}");
+            var studentsOlderThan21 = Student.GetStudentsOlderThan(StudentList, 21);
+            DisplayStudentMarks(studentsOlderThan21, "\n7. Students older than 21 sorted by Mark:");
+      
 
             // 8. Find Top N Students by Mark
-            var top3StudentsByMark = StudentList
-                .OrderByDescending(s => s.Mark)
-                .Take(3);
-            Console.WriteLine("\n8. Top 3 Students by Mark:");
-            foreach (var student in top3StudentsByMark)
-                Console.WriteLine($"{student.Surname}, {student.Mark}");
+            var top3StudentsByMark = Student.GetTopStudentsByMark(StudentList, 3);
+            DisplayStudentMarks(top3StudentsByMark, "\n8. Top 3 Students by Mark:");
 
             // 9. Select and Transform Data
             var transformedData = StudentList
                 .Select(s => new StudentViewModel
-                { 
-                    name = $"{s.Forenames} {s.Surname}", 
+                {
+                    name = $"{s.Forenames} {s.Surname}",
                     course = s.Course,
-                    IsAbove80 = s.Mark > 80 
+                    IsAbove80 = s.Mark > 80
                 });
             Console.WriteLine("\n9. Transformed Data (with boolean for mark > 80):");
             foreach (var student in transformedData)
@@ -119,7 +87,13 @@ namespace StudentList
             Console.WriteLine($"Total Students: {totalStudents}, Average Age: {years} years and {months} months, Highest Mark: {highestMark}");
         }
 
-        
+        private static void DisplayStudentMarks(List<StudentViewModel> compSciStudents,string message)
+        {
+            Console.WriteLine(message);
+            foreach (var student in compSciStudents)
+                Console.WriteLine($"{student.name}, {student.mark}");
+        }
+
 
 
 
